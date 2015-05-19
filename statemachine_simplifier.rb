@@ -6,91 +6,34 @@ Description: This program takes in .txt file with a state table
 and reduces it to its simplest form 
 =end 
 
-def dup_remove(table0)
-  #Simplifies states with same output and next states 
-  for i in 0..((table0.size)-1) 
-    check1 = table0[i][1]
-    check2 = table0[i][2]
-    for j in 0..((table0.size)-1)
-      if i != j then 
-        #States are exactly the same 
-        if (table0[i][1] == table0[j][1]) and (table0[i][2] == table0[j][2]) then 
-          #Replaces all instances of state to be removed with equivalent state 
-          to_rep = table0[i][0] 
-          to_rem = table0[j][0]
-  
-          t_index = []
-          #Removes the state from the array 
-          table0[j] = "-1"
-          for i in 0..((table0.size)-1)
-            for j in 0..((table0[0].size)-1)
-              if table0[i][j] == to_rem then 
-                table0[i][j] = to_rep 
-              end 
-            end 
-          end 
-        end 
-      end 
-    end
-  end
-  
-  #Removes the placeholders from the table 
-  for i in 0..((table0.size)-1)
-    if table0[i] == "-1" then 
-      t_index.push(i) 
-    end
-  end
-   
-  if t_index != nil then 
-    for i in 0..((t_index.size)-1)
-      table0.delete_at(t_index[i])
-      for j in i..((t_index.size)-1)
-        t_index[j] = t_index[j]-1
-      end 
-    end 
-  end 
-  
-  
-  #puts table0.inspect 
-  return table0
-end 
-
 #loops through the given array, and minimizes the states 
 def x_out(arr1, s_table)
-  #puts arr1.inspect
-  #puts arr1.size
   for i in 0..((arr1.size)-1)
     #Loops through each row of the columns 
-    #puts i
-    #puts arr1.inspect
-    #puts arr1[i].inspect
     for j in 0..((arr1[i].size)-1)
       #If the cell is not an "X"
       if arr1[i][j].size != 1
         #If the states are not equal 
-        if arr1[i][j][0] != arr1[i][j][2]                                       ###################1
+        if arr1[i][j][0] != arr1[i][j][2]                                       
           #If the first state is less than the second state
-          if arr1[i][j][0] < arr1[i][j][2]                                      ###################2
+          if arr1[i][j][0] < arr1[i][j][2]                                      
             #If arr1[small-1][(big-2)-(small-1)] = "X"
-            if arr1[(arr1[i][j][0])-1][(arr1[i][j][2]-2)-(arr1[i][j][0]-1)] == "X"        ###################3   
+            if arr1[(arr1[i][j][0])-1][(arr1[i][j][2]-2)-(arr1[i][j][0]-1)] == "X"         
               arr1[i][j] = "X" 
-            end                                                                 ###################3
+            end                                                                 
             #If the first state is more than the second state 
-          else                                                                  ###################2
+          else                                                                  
             #If arr1[small-1][(big-2)-(small-1)] = "X"
-            if arr1[arr1[i][j][2]-1][(arr1[i][j][0]-2)-(arr1[i][j][2]-1)] == "X"          ###################4  
+            if arr1[arr1[i][j][2]-1][(arr1[i][j][0]-2)-(arr1[i][j][2]-1)] == "X"           
               arr1[i][j] = "X"
-            end                                                                 ###################4
-          end                                                                   ###################2
-        end                                                                     ###################1
+            end                                                                 
+          end                                                                  
+        end                                                                     
         if arr1[i][j].size != 1
-        #print "Loop 2", arr1.inspect, "\n"
           #If the states are not equal 
           if arr1[i][j][1] != arr1[i][j][3]
             #If the first state is less than the second state
             if arr1[i][j][1] < arr1[i][j][3]
-              #puts arr1[i][j].inspect
-              #puts arr1[(arr1[i][j][1])-1][(arr1[i][j][3]-2)-(arr1[i][j][1]-1)].inspect
               #If arr1[small-1][(big-2)-(small-1)] = "X"
               if arr1[(arr1[i][j][1])-1][(arr1[i][j][3]-2)-(arr1[i][j][1]-1)] == "X"                         
                 arr1[i][j] = "X" 
@@ -145,15 +88,6 @@ def main()
     end
   end
   
-  while dup_remove(table0) != table0
-    table0 = dup_remove(table0)
-  end
-  
-  while dup_remove(table1) != table1 
-    table1 = dup_remove(table1)
-  end
-  
-  
   #Removes the rest of the unnecessary states 
   
   #table of states that have the possibility of being combined 
@@ -166,7 +100,6 @@ def main()
     pos_comb[i] = Array.new(s_table.size-(i+1), "0")
   end 
   
-  #puts pos_comb.inspect
   
   #Creates an array with a numerical equivalent of the state number 
   s0_arr = Array.new(table0.size)
@@ -197,24 +130,12 @@ def main()
   for i in 0..((s0_arr.size)-1)
     for j in 0..((s1_arr.size)-1)
       if s0_arr[i] < s1_arr[j] then 
-        #puts (s1_arr[j]-s0_arr[i]-1)
         pos_comb[s0_arr[i]-1][(s1_arr[j]-s0_arr[i])-1] = "X"
       else 
         pos_comb[s1_arr[j]-1][(s0_arr[i]-s1_arr[j])-1] = "X"
       end 
     end 
   end 
-  
-#  #reverses the items in the pos_comb arrays 
-#  for i in 0..((pos_comb.size)-1)
-#    pos_comb[i].reverse
-#  end 
-  
-  #puts pos_comb.inspect
-  #puts pos_comb[0][5]
-  
-  #Need to go through the pos_comb array, and wherever there is not an X, fill the 
-  #next states of the combination 
   
   #Loops through the pos_comb array, and wherever there is not an X, places an array of 
   #to hold the next states of the combination 
@@ -242,7 +163,6 @@ def main()
         #Rows 
         for k in 2 .. 3
           #numbers 
-          #puts s_table[j].inspect
           if (s_table[(i+j)+1][k-1].ord >= 30) && (s_table[(i+j)+1][k-1].ord <= 57)
             pos_comb[i][j][k] = s_table[j+1][k-1]
           #uppercase
@@ -256,21 +176,14 @@ def main()
         
       end 
     end 
-  end 
-  
-  #puts pos_comb.inspect 
- 
+  end  
   
   while x_out(pos_comb, s_table)  != pos_comb
-    #pos_comb = x_out(pos_comb, s_table)
     pos_comb = x_out(pos_comb, s_table)
- 
   end
-  #puts pos_comb.inspect
-  
+
   pos_comb = x_out(pos_comb, s_table) 
-  #puts pos_comb.inspect 
-  
+
   can_combine = []
   #Creates the simplified state table 
   for i in 0..((pos_comb.size)-1)
@@ -282,9 +195,6 @@ def main()
       end
     end 
   end
-  
-  #puts pos_comb.inspect
-  #puts can_combine.inspect
   
   #If the states are originally letters, converts 
   #the array to letter equivalent 
@@ -304,18 +214,52 @@ def main()
       end
     end     
   end
+    
+ new_table = s_table
   
-  puts can_combine.inspect
-  
-  for i in 0..((s_table.size)-1)
-    for j in ((s_table[i].size)-1)
-      for k in ((can_combine.size)-1)
-        if s_table[i][0] == can_combine[k][1] 
-          s_table[i] = Array.new(s_table[i].size, "X")
+  for i in 0..((new_table.size)-1)
+    for j in 0..((new_table[i].size)-1)
+      for k in 0..((can_combine.size)-1)
+        if new_table[i][0] == can_combine[k][1] 
+          new_table[i] = Array.new(new_table[i].size, "X")
+        elsif new_table[i][j] == can_combine[k][1]
+          new_table[i][j] = can_combine[k][0]
         end
       end
     end
   end
+
+  new_index = []
+  
+  #Removes the placeholders from the table 
+  for i in 0..((new_table.size)-1)
+    if new_table[i][0] == "X" then 
+      new_index.push(i) 
+    end
+  end
+   
+  if new_index != nil then 
+    for i in 0..((new_index.size)-1)
+      new_table.delete_at(new_index[i])
+      for j in i..((new_index.size)-1)
+        new_index[j] = new_index[j]-1
+      end 
+    end 
+  end 
+  
+  puts "\nMinimized state table:"
+   
+  #Displays the simplified state table 
+  for i in 0..((new_table.size)-1)
+    for j in 0..((new_table[i].size)-1)
+      if j != ((new_table[i].size)-1)
+        print new_table[i][j], " "
+      else
+        print new_table[i][j], "\n"
+    end 
+  end
 end
+end
+
 
 main()
