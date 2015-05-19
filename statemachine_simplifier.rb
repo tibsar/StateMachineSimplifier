@@ -57,21 +57,16 @@ end
 
 #loops through the given array, and minimizes the states 
 def x_out(arr1, s_table)
-  puts arr1.inspect
+  #puts arr1.inspect
   #puts arr1.size
-  #loops through the columns 
-  #puts arr1[4].inspect
   for i in 0..((arr1.size)-1)
     #Loops through each row of the columns 
+    #puts i
+    #puts arr1.inspect
+    #puts arr1[i].inspect
     for j in 0..((arr1[i].size)-1)
-     
-      print "i: " , i,  " j: " , j, "\n"
-      #puts arr1[i][j].inspect
       #If the cell is not an "X"
       if arr1[i][j].size != 1
-#       puts arr1[i][j].inspect
-#       puts arr1[(arr1[i][j][1])-1][(arr1[i][j][3]-2)-(arr1[i][j][1]-1)].inspect
-        print "Loop 1", arr1.inspect, "\n"
         #If the states are not equal 
         if arr1[i][j][0] != arr1[i][j][2]                                       ###################1
           #If the first state is less than the second state
@@ -89,7 +84,7 @@ def x_out(arr1, s_table)
           end                                                                   ###################2
         end                                                                     ###################1
         if arr1[i][j].size != 1
-        print "Loop 2", arr1.inspect, "\n"
+        #print "Loop 2", arr1.inspect, "\n"
           #If the states are not equal 
           if arr1[i][j][1] != arr1[i][j][3]
             #If the first state is less than the second state
@@ -112,6 +107,7 @@ def x_out(arr1, s_table)
       end 
     end 
   end 
+  arr1
 end 
 
 def main()
@@ -263,13 +259,63 @@ def main()
   end 
   
   #puts pos_comb.inspect 
-    
+ 
+  
+  while x_out(pos_comb, s_table)  != pos_comb
+    #pos_comb = x_out(pos_comb, s_table)
+    pos_comb = x_out(pos_comb, s_table)
+ 
+  end
   #puts pos_comb.inspect
   
-while x_out(pos_comb, s_table) != pos_comb
-  pos_comb = x_out(pos_comb, s_table)
-end
+  pos_comb = x_out(pos_comb, s_table) 
+  #puts pos_comb.inspect 
   
+  can_combine = []
+  #Creates the simplified state table 
+  for i in 0..((pos_comb.size)-1)
+    for j in 0..((pos_comb[i].size)-1)
+      #if the item is not an X
+      if pos_comb[i][j] != "X" 
+          can_combine.push([i+1, j+i+2])
+
+      end
+    end 
+  end
+  
+  #puts pos_comb.inspect
+  #puts can_combine.inspect
+  
+  #If the states are originally letters, converts 
+  #the array to letter equivalent 
+  
+  #uppercase
+  if (s_table[0][0].ord >= 65) && (s_table[0][0].ord <= 90)
+    for i in 0..((can_combine.size)-1)
+      for j in 0..((can_combine[i].size)-1)
+        can_combine[i][j] = (can_combine[i][j]+64).chr
+      end
+    end 
+  #lowercase
+  elsif (s_table[0][0].ord >= 97) && (s_table[0][0].ord <= 122)
+    for i in 0..((can_combine.size)-1)
+      for j in 0..((can_combine[i].size)-1)
+        can_combine[i][j] = (can_combine[i][j]+96).chr
+      end
+    end     
+  end
+  
+  puts can_combine.inspect
+  
+  for i in 0..((s_table.size)-1)
+    for j in ((s_table[i].size)-1)
+      for k in ((can_combine.size)-1)
+        if s_table[i][0] == can_combine[k][1] 
+          s_table[i] = Array.new(s_table[i].size, "X")
+        end
+      end
+    end
+  end
 end
 
 main()
