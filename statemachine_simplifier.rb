@@ -65,40 +65,45 @@ def x_out(arr1, s_table)
     #Loops through each row of the columns 
     for j in 0..((arr1[i].size)-1)
      
-      #print "i: " , i,  " j: " , j, "\n"
+      print "i: " , i,  " j: " , j, "\n"
       #puts arr1[i][j].inspect
       #If the cell is not an "X"
       if arr1[i][j].size != 1
+#       puts arr1[i][j].inspect
+#       puts arr1[(arr1[i][j][1])-1][(arr1[i][j][3]-2)-(arr1[i][j][1]-1)].inspect
+        print "Loop 1", arr1.inspect, "\n"
         #If the states are not equal 
         if arr1[i][j][0] != arr1[i][j][2]                                       ###################1
           #If the first state is less than the second state
           if arr1[i][j][0] < arr1[i][j][2]                                      ###################2
             #If arr1[small-1][(big-2)-(small-1)] = "X"
-            if arr1[(arr1[i][j][0])-1][(arr1[i][j][2]-2)-(arr1[i][j][0]-1)] = "X"        ###################3  where the problem lies 
-               
+            if arr1[(arr1[i][j][0])-1][(arr1[i][j][2]-2)-(arr1[i][j][0]-1)] == "X"        ###################3   
               arr1[i][j] = "X" 
             end                                                                 ###################3
             #If the first state is more than the second state 
           else                                                                  ###################2
             #If arr1[small-1][(big-2)-(small-1)] = "X"
-            if arr1[arr1[i][j][2]-1][(arr1[i][j][0]-2)-(arr1[i][j][2]-1)] = "X"          ###################4  where the problem lies 
+            if arr1[arr1[i][j][2]-1][(arr1[i][j][0]-2)-(arr1[i][j][2]-1)] == "X"          ###################4  
               arr1[i][j] = "X"
             end                                                                 ###################4
           end                                                                   ###################2
         end                                                                     ###################1
-        if arr1[i][j] != "X"
+        if arr1[i][j].size != 1
+        print "Loop 2", arr1.inspect, "\n"
           #If the states are not equal 
           if arr1[i][j][1] != arr1[i][j][3]
             #If the first state is less than the second state
             if arr1[i][j][1] < arr1[i][j][3]
+              #puts arr1[i][j].inspect
+              #puts arr1[(arr1[i][j][1])-1][(arr1[i][j][3]-2)-(arr1[i][j][1]-1)].inspect
               #If arr1[small-1][(big-2)-(small-1)] = "X"
-              if arr1[(arr1[i][j][1])-1][(arr1[i][j][3]-2)-(arr1[i][j][1]-1)] = "X"                            #problem again
+              if arr1[(arr1[i][j][1])-1][(arr1[i][j][3]-2)-(arr1[i][j][1]-1)] == "X"                         
                 arr1[i][j] = "X" 
               end 
               #If the first state is more than the second state 
             else 
               #If arr1[small-1][(big-2)-(small-1)] = "X"
-              if arr1[arr1[i][j][3]-1][(arr1[i][j][1]-2)-(arr1[i][j][3]-1)] = "X"                              #problem again 
+              if arr1[arr1[i][j][3]-1][(arr1[i][j][1]-2)-(arr1[i][j][3]-1)] == "X"             
                 arr1[i][j] = "X"
               end 
             end 
